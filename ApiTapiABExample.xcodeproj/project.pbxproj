@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		43BECE73243DF41F00D4EA70 /* ApiTapiABError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43BECE72243DF41F00D4EA70 /* ApiTapiABError.swift */; };
 		43C9ADB7231E3C2000FFD39A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C9ADB6231E3C2000FFD39A /* AppDelegate.swift */; };
 		43C9ADB9231E3C2000FFD39A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C9ADB8231E3C2000FFD39A /* ViewController.swift */; };
 		43C9ADBC231E3C2000FFD39A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43C9ADBA231E3C2000FFD39A /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		43BECE72243DF41F00D4EA70 /* ApiTapiABError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTapiABError.swift; sourceTree = "<group>"; };
 		43C9ADB3231E3C2000FFD39A /* ApiTapiABExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApiTapiABExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43C9ADB6231E3C2000FFD39A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		43C9ADB8231E3C2000FFD39A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 				43C9ADCD231E3E2700FFD39A /* AnyCodable.swift */,
 				43C9ADD4231E40AD00FFD39A /* State.swift */,
 				43C9ADD6231E41DE00FFD39A /* ApiTapiTest.swift */,
+				43BECE72243DF41F00D4EA70 /* ApiTapiABError.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -171,6 +174,7 @@
 				43C9ADB9231E3C2000FFD39A /* ViewController.swift in Sources */,
 				43C9ADD0231E3E2700FFD39A /* API.swift in Sources */,
 				43C9ADB7231E3C2000FFD39A /* AppDelegate.swift in Sources */,
+				43BECE73243DF41F00D4EA70 /* ApiTapiABError.swift in Sources */,
 				43C9ADD2231E3E2700FFD39A /* AnyCodable.swift in Sources */,
 				43C9ADD5231E40AD00FFD39A /* State.swift in Sources */,
 			);

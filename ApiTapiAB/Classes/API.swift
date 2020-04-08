@@ -8,24 +8,6 @@
 
 import Foundation
 
-typealias ResultType = (Result<Data, Error>) -> Void
-
-enum ABError: Error {
-
-  case invalidResponse
-  case invalidData
-  case serverError(statusCode: Int)
-
-  var description: String {
-    switch self {
-    case .invalidResponse: return "Invalid response from server"
-    case .invalidData: return "Invalid response data"
-    case .serverError(let statusCode): return "Server error, status code: \(statusCode)"
-    }
-  }
-
-}
-
 struct API {
 
   static let modifier: String = "api"
@@ -35,15 +17,19 @@ struct API {
 
   static func get(_ url: URL,
                   headers: [String: String]?,
-                  completion: @escaping ResultType) {
+                  timeoutInterval: TimeInterval,
+                  completion: @escaping (Data?, ApiTapiABError?) -> Void) {
     var urlRequest = URLRequest(url: url)
     urlRequest.httpMethod = "GET"
     urlRequest.allHTTPHeaderFields = headers
+    urlRequest.timeoutInterval = timeoutInterval
 
     URLSession.shared.dataTask(with: urlRequest) { data, response, error in
       if let error = error {
         DispatchQueue.main.async {
-          completion(.failure(error))
+          let abError = ApiTapiABError(error: "URL error: \(error.localizedDescription)",
+            code: (error as? URLError)?.errorCode ?? 0)
+          completion(nil, abError)
         }
 
         return
@@ -51,7 +37,9 @@ struct API {
 
       guard let response = response as? HTTPURLResponse else {
         DispatchQueue.main.async {
-          completion(.failure(ABError.invalidResponse))
+          let abError = ApiTapiABError(error: "Invalid response from server",
+                                       code: 0)
+          completion(nil, abError)
         }
 
         return
@@ -59,7 +47,9 @@ struct API {
 
       guard 200 ... 299 ~= response.statusCode else {
         DispatchQueue.main.async {
-          completion(.failure(ABError.serverError(statusCode: response.statusCode)))
+          let abError = ApiTapiABError(error: "Server error",
+                                       code: response.statusCode)
+          completion(nil, abError)
         }
 
         return
@@ -67,14 +57,16 @@ struct API {
 
       guard let data = data else {
         DispatchQueue.main.async {
-          completion(.failure(ABError.invalidData))
+          let abError = ApiTapiABError(error: "Invalid response data",
+                                       code: 0)
+          completion(nil, abError)
         }
 
         return
       }
 
       DispatchQueue.main.async {
-        completion(.success(data))
+        completion(data, nil)
       }
       }.resume()
   }

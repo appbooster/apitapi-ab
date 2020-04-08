@@ -16,8 +16,8 @@ class ViewController: UIViewController {
     let ab = ApiTapiAB(authToken: "<APITAPI_AUTH_TOKEN>",
                        deviceToken: "<DEVICE_TOKEN")
     ab.fetch(knownKeys: ["<TEST_1_KEY>", "<TEST_2_KEY>"],
-             completion: { error in
-              guard error == nil else { return }
+             completion: { abError in
+              guard abError == nil else { return }
               
               let test1Value: String? = ab.value("<TEST_1_KEY>")
               let test2Value: Int = ab.value("<TEST_2_KEY>", or: 3)

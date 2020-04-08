@@ -28,6 +28,7 @@ let ab = ApiTapiAB(serverUrl: "<YOUR_APITAPI_SERVER_URL>", // optional, e.g. "ht
 
 ```
 ab.fetch(knownKeys: ["<TEST_1_KEY>", "<TEST_2_KEY>"],
+         timeoutInterval: 3.0, // optional
          completion: { error in })
 ```
 

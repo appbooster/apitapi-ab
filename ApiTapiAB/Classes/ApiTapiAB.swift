@@ -37,7 +37,8 @@ public final class ApiTapiAB: NSObject {
   public var lastOperationDuration: TimeInterval = 0.0
 
   public func fetch(knownKeys: [String],
-                    completion: @escaping (_ error: String?) -> Void) {
+                    timeoutInterval: TimeInterval = 3.0,
+                    completion: @escaping (_ abError: ApiTapiABError?) -> Void) {
     let urlPath = [serverUrl, API.modifier, "\(API.versionModifier)\(API.version)", API.path]
       .joined(separator: "/")
 
@@ -45,11 +46,12 @@ public final class ApiTapiAB: NSObject {
     urlComponents?.queryItems = knownKeys.map({ URLQueryItem(name: "knownKeys[]", value: $0) })
 
     guard let url = urlComponents?.url else {
-      let error = "Invalid url"
+      let abError = ApiTapiABError(error: "Invalid url",
+                                   code: 0)
 
-      debugAndLog("[ApiTapiAB] \(error)")
+      debugAndLog("[ApiTapiAB] Error – \(abError.error), error code: \(abError.code)")
 
-      completion(error)
+      completion(abError)
 
       return
     }
@@ -65,25 +67,17 @@ public final class ApiTapiAB: NSObject {
 
     API.get(url,
             headers: headers,
-            completion: { [weak self] result in
+            timeoutInterval: timeoutInterval,
+            completion: { [weak self] data, abError in
               guard let self = self else { return }
 
               self.lastOperationDuration = Date().timeIntervalSince(startDate)
 
-              switch result {
-              case .failure(let error):
-                let resultError: String
+              if let abError = abError {
+                self.debugAndLog("[ApiTapiAB] Error – \(abError.error), error code: \(abError.code)")
 
-                if let abError = error as? ABError {
-                  resultError = abError.description
-                } else {
-                  resultError = "Error: \(error.localizedDescription)"
-                }
-
-                self.debugAndLog("[ApiTapiAB] \(resultError)")
-
-                completion(resultError)
-              case .success(let data):
+                completion(abError)
+              } else if let data = data {
                 do {
                   let tests = try JSONDecoder().decode([ApiTapiTest].self, from: data)
 
@@ -92,9 +86,12 @@ public final class ApiTapiAB: NSObject {
                   completion(nil)
                 }
                 catch {
-                  self.debugAndLog("[ApiTapiAB] Tests decoding error: \(error.localizedDescription)")
+                  let abError = ApiTapiABError(error: "Tests decoding error: \(error.localizedDescription)",
+                    code: 0)
 
-                  completion(error.localizedDescription)
+                  self.debugAndLog("[ApiTapiAB] Error – \(abError.error), error code: \(abError.code)")
+
+                  completion(abError)
                 }
               }
     })
